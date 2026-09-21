@@ -1,7 +1,9 @@
 extends Node3D
 ## Playable scaffold for DESIGN.md section 9, tasks 2 and 4: one fight
 ## against a 50 HP training dummy, with the three prototype cards and their
-## ring timing events, presented in a 3D arena.
+## ring timing events. The arena (avatars, camera, lighting) is 3D; the
+## ring timing event itself is a 2D screen-space HUD element (RingWidget),
+## overlaid on top via the HUD CanvasLayer.
 ##
 ## Card selection: click a card, press 1-3, or drag it onto the battlefield.
 ## The timing event itself resolves on Space. F1 toggles assist mode.
@@ -9,12 +11,12 @@ extends Node3D
 const CARD_VIEW_SCENE := preload("res://scenes/ui/card_view.tscn")
 const CARD_SLOT_SIZE := Vector2(112, 160)
 
-@onready var ring_widget: RingWidget3D = $RingWidget3D
 @onready var player_avatar: MeshInstance3D = $PlayerAvatar
 @onready var dummy_avatar: MeshInstance3D = $DummyAvatar
 @onready var fx_root: Node3D = $FxRoot
 
 @onready var drop_zone: BattlefieldDropZone = $HUD/Root
+@onready var ring_widget: RingWidget = $HUD/Root/RingWidget
 @onready var player_status: Label = $HUD/Root/TopLeft/PlayerStatus
 @onready var dummy_status: Label = $HUD/Root/TopLeft/DummyStatus
 @onready var assist_label: Label = $HUD/Root/TopLeft/AssistLabel

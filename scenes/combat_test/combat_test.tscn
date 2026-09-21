@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scenes/combat_test/combat_test.gd" id="1_combattest"]
-[ext_resource type="PackedScene" path="res://scenes/ring_event/ring_widget_3d.tscn" id="2_ringwidget3d"]
+[ext_resource type="PackedScene" path="res://scenes/ring_event/ring_widget.tscn" id="2_ringwidget"]
 [ext_resource type="Script" path="res://scripts/ui/battlefield_drop_zone.gd" id="3_dropzone"]
 
 [sub_resource type="Environment" id="Environment_arena"]
@@ -92,9 +92,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.35, -2.0)
 mesh = SubResource("CylinderMesh_post")
 surface_material_override/0 = SubResource("StandardMaterial3D_post")
 
-[node name="RingWidget3D" parent="." instance=ExtResource("2_ringwidget3d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.3)
-
 [node name="FxRoot" type="Node3D" parent="."]
 
 [node name="HUD" type="CanvasLayer" parent="."]
@@ -168,6 +165,9 @@ layout_mode = 2
 alignment = 1
 theme_override_constants/separation = 14
 mouse_filter = 2
+
+[node name="RingWidget" parent="HUD/Root" instance=ExtResource("2_ringwidget")]
+layout_mode = 1
 
 [node name="PlayHint" type="Label" parent="HUD/Root"]
 layout_mode = 1
