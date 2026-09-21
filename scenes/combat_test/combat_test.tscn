@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/combat_test/combat_test.gd" id="1_combattest"]
+[ext_resource type="PackedScene" path="res://scenes/ring_event/ring_widget.tscn" id="2_ringwidget"]
+
+[node name="CombatTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_combattest")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.09, 0.09, 0.12, 1)
+
+[node name="UI" type="VBoxContainer" parent="."]
+layout_mode = 1
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 460.0
+offset_bottom = 400.0
+
+[node name="PlayerStatus" type="Label" parent="UI"]
+layout_mode = 2
+text = "You  HP --/--   Mana --/--"
+
+[node name="DummyStatus" type="Label" parent="UI"]
+layout_mode = 2
+text = "Training Dummy  HP --/--"
+
+[node name="HandSpacer" type="Control" parent="UI"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 12)
+
+[node name="HandLabel" type="Label" parent="UI"]
+layout_mode = 2
+text = "[1] ...\n[2] ...\n[3] ..."
+
+[node name="AssistLabel" type="Label" parent="UI"]
+layout_mode = 2
+text = "Assist mode: off (F1 to toggle)"
+
+[node name="LogSpacer" type="Control" parent="UI"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 12)
+
+[node name="Log" type="RichTextLabel" parent="UI"]
+layout_mode = 2
+custom_minimum_size = Vector2(420, 200)
+bbcode_enabled = true
+scroll_following = true
+
+[node name="RingWidget" parent="." instance=ExtResource("2_ringwidget")]
+layout_mode = 1

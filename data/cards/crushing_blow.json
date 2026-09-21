@@ -1,0 +1,14 @@
+{
+  "id": "crushing_blow",
+  "name": "Crushing blow",
+  "type": "heavy",
+  "manaCost": 3,
+  "baseDamage": 14,
+  "event": {
+    "kind": "ring",
+    "durationMs": 1800,
+    "zoneScale": 1.5,
+    "critBase": 1.5,
+    "tierMultipliers": [1, 1.15, 1.3, 3.6]
+  }
+}

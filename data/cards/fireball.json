@@ -1,0 +1,14 @@
+{
+  "id": "fireball",
+  "name": "Fireball",
+  "type": "standard",
+  "manaCost": 2,
+  "baseDamage": 8,
+  "event": {
+    "kind": "ring",
+    "durationMs": 1400,
+    "zoneScale": 1.0,
+    "critBase": 2.5,
+    "tierMultipliers": [1, 1.25, 1.5, 2]
+  }
+}

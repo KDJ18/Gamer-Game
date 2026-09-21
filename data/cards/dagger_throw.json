@@ -1,0 +1,14 @@
+{
+  "id": "dagger_throw",
+  "name": "Dagger throw",
+  "type": "light",
+  "manaCost": 1,
+  "baseDamage": 4,
+  "event": {
+    "kind": "ring",
+    "durationMs": 1100,
+    "zoneScale": 0.7,
+    "critBase": 4.0,
+    "tierMultipliers": [1, 1.5, 2, 3]
+  }
+}
