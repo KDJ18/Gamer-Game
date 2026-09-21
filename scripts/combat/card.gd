@@ -8,6 +8,9 @@ var display_name: String = ""
 var type: String = "standard"  # "heavy" | "standard" | "light" | ...
 var mana_cost: int = 0
 var base_damage: float = 0.0
+## Path to the card's icon art (res://assets/icons/...). Empty is valid --
+## the card view falls back to a type-colored placeholder.
+var icon_path: String = ""
 ## null if this card has no timing event (most of the deck, per design:
 ## "about a quarter to a third of a deck" should have one).
 var event: CardEventData = null
@@ -19,6 +22,7 @@ static func from_dict(d: Dictionary) -> Card:
 	card.type = d.get("type", "standard")
 	card.mana_cost = int(d.get("manaCost", 0))
 	card.base_damage = float(d.get("baseDamage", 0.0))
+	card.icon_path = d.get("icon", "")
 	if d.get("event") is Dictionary:
 		card.event = CardEventData.from_dict(d["event"])
 	return card

@@ -4,6 +4,7 @@
   "type": "standard",
   "manaCost": 2,
   "baseDamage": 8,
+  "icon": "res://assets/icons/card_fireball.svg",
   "event": {
     "kind": "ring",
     "durationMs": 1400,

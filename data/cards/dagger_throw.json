@@ -4,6 +4,7 @@
   "type": "light",
   "manaCost": 1,
   "baseDamage": 4,
+  "icon": "res://assets/icons/card_dagger_throw.svg",
   "event": {
     "kind": "ring",
     "durationMs": 1100,

@@ -4,6 +4,7 @@
   "type": "heavy",
   "manaCost": 3,
   "baseDamage": 14,
+  "icon": "res://assets/icons/card_crushing_blow.svg",
   "event": {
     "kind": "ring",
     "durationMs": 1800,

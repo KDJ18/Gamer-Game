@@ -20,4 +20,10 @@ func _ready() -> void:
 	assert(scene.combat.enemy.hp == 0)
 
 	print("integration smoke test: OK (dummy defeated via wired-up scene)")
+
+	# Let the rendering server finish registering this frame's 3D nodes
+	# before tearing them down; quitting mid-_ready() in headless/dummy-
+	# renderer mode can otherwise log harmless "mesh_get_surface_count:
+	# Parameter is null" noise during node cleanup.
+	await get_tree().process_frame
 	get_tree().quit(0)

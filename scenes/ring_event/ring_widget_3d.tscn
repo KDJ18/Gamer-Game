@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/ring_event/ring_widget_3d.gd" id="1_ringwidget3d"]
+[ext_resource type="Shader" path="res://scenes/ring_event/ring_zone.gdshader" id="2_ringzone"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ringzone"]
+shader = ExtResource("2_ringzone")
+shader_parameter/mesh_radius = 4.5
+shader_parameter/target_radius = 1.333
+shader_parameter/good_half = 1.1
+shader_parameter/great_half = 0.4
+shader_parameter/crit_half = 0.05
+shader_parameter/ring_radius = 3.83
+shader_parameter/stroke_width = 0.035
+shader_parameter/good_color = Color(0.2, 0.75, 0.3, 0.75)
+shader_parameter/great_color = Color(0.85, 0.75, 0.15, 0.8)
+shader_parameter/crit_color = Color(0.8, 0.2, 0.2, 0.85)
+shader_parameter/bg_color = Color(0.05, 0.05, 0.09, 0)
+shader_parameter/marker_color = Color(1, 1, 1, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ringzone"]
+size = Vector2(9, 9)
+
+[node name="RingWidget3D" type="Node3D"]
+script = ExtResource("1_ringwidget3d")
+
+[node name="ZonePlane" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_ringzone")
+material_override = SubResource("ShaderMaterial_ringzone")
