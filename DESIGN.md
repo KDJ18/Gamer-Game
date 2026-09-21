@@ -207,3 +207,48 @@ Optional: prototype the rules outside the engine first (spreadsheet, paper cards
 3. Implement the ring event as a standalone, testable module. Inputs: event parameters and player stats. Output: tier. Unit-test the zone formula and tier resolution with the values in section 4.
 4. Add the three prototype cards and a training dummy (50 HP).
 5. Add an assist mode toggle and an input calibration setting.
+
+## 10. Weapon Master card pool (Draft, not balanced, not implemented)
+
+Flavor: daggers, hammers, bows -- any medieval weapon. Weapon Master starts
+with the 5 shared common cards (section 2); the cards below are class-specific
+on top of that, rarity-tiered (Common / Uncommon / Rare).
+
+Numbers below are first-draft and explicitly not balanced yet -- don't treat
+them as final when implementing.
+
+### Common
+- **Slash** -- 3-5 damage + bleed (amount TBD)
+- **Backstab** -- 2 bleed to all enemies
+- **Swipe** -- 2-4 damage to all enemies
+- **Multishot** -- 5 arrows at one enemy, 1 damage per landing arrow
+- **Parry** -- chance to negate an incoming common attack; applies 1 bleed
+- **Dodge** -- avoid an incoming attack entirely
+- **Jagged Edge** -- 2 damage + 4 bleed
+
+### Uncommon
+- **Quickdraw** -- mash as many arrows as possible in a 2s window, 1 damage each, capped at 10
+- **Split Shot** -- 6 base damage, 50% chance to split into 12 damage
+- **Gavel** -- 10 damage, 50% chance to stun the enemy for 1 turn
+- **Dagger Storm** -- hits each enemy for 5 damage, 50% crit chance per hit
+- **Strike** -- 4 damage per strike, up to 3 strikes within a 2s window (slider input)
+
+### Rare
+- **Double Down** -- deals damage equal to the enemy's current bleed stacks
+
+### New systems these imply (none exist yet)
+Flagging so implementation doesn't get started on cards whose prerequisites
+aren't decided:
+- **Bleed** and **stun** status effects -- section 3 & 7 already deferred status
+  effects generally; these cards need magnitude/duration/stacking rules decided
+  before "Double Down" or "Gavel" can be built.
+- **Multi-enemy targeting / AoE** ("hits all enemies") -- CombatState currently
+  assumes exactly one enemy (the training dummy).
+- **RNG chance effects** (50% split/crit/stun) -- a mechanic distinct from the
+  ring's timing-based crit tier; needs its own resolution step.
+- **Two new event kinds**: Mash (Quickdraw) and a strike/slider input (Strike)
+  -- only "ring" is implemented today (section 4 lists these as future event
+  types but only prototyped ring).
+- **Reactive event type** (Parry, Dodge: timed on the *enemy's* turn) -- combat
+  is currently strict alternating turns where only the active player acts;
+  reactive cards need a way to interrupt the opponent's turn.

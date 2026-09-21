@@ -47,7 +47,7 @@ func _start_fight() -> void:
 	var dummy := Combatant.new("dummy", "Training Dummy", 50, 0, true, 0)
 
 	var hand: Array[Card] = []
-	for id in ["crushing_blow", "fireball", "dagger_throw"]:
+	for id in ["crushing_blow", "fireball", "dagger_throw", "dagger_barrage"]:
 		var card: Card = CardDatabase.get_card(id)
 		if card != null:
 			hand.append(card)
@@ -87,6 +87,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_1: _try_play(0)
 			KEY_2: _try_play(1)
 			KEY_3: _try_play(2)
+			KEY_4: _try_play(3)
 
 func _try_play(index: int) -> void:
 	if combat.phase != CombatState.Phase.PLAYER_CHOOSING:

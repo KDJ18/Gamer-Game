@@ -15,6 +15,7 @@ static func test_card_database_loads_three_prototype_cards(t: TestRunner) -> voi
 	t.assert_true(CardDatabase.has_card("crushing_blow"), "crushing_blow is loaded from data/cards")
 	t.assert_true(CardDatabase.has_card("fireball"), "fireball is loaded from data/cards")
 	t.assert_true(CardDatabase.has_card("dagger_throw"), "dagger_throw is loaded from data/cards")
+	t.assert_true(CardDatabase.has_card("dagger_barrage"), "dagger_barrage is loaded from data/cards")
 
 static func test_crushing_blow_crit_one_shots_the_dummy(t: TestRunner) -> void:
 	var combat := CombatState.new()
@@ -61,6 +62,37 @@ static func test_cannot_afford_card_is_rejected(t: TestRunner) -> void:
 	t.assert_eq(combat.phase, CombatState.Phase.PLAYER_CHOOSING, "phase stays PLAYER_CHOOSING when the card is rejected")
 	combat.free()
 
+static func test_dagger_barrage_hit_count_scales_with_accuracy(t: TestRunner) -> void:
+	# Dagger Barrage: 1 damage per dagger, and the tier controls how many
+	# daggers land -- so damage dealt *is* the dagger count directly.
+	var combat := CombatState.new()
+	var player := _make_player()
+	var dummy := _make_dummy()
+	var hand: Array[Card] = [CardDatabase.get_card("dagger_barrage")]
+	combat.setup(player, dummy, hand)
+
+	combat.choose_card(hand[0])
+	combat.resolve_timing_press(0.0)  # far from target -> miss
+
+	t.assert_eq(dummy.hp, 50 - 1, "a miss still lands exactly 1 dagger (base effect), never 0")
+	combat.free()
+
+static func test_dagger_barrage_dead_center_lands_all_daggers(t: TestRunner) -> void:
+	var combat := CombatState.new()
+	var player := _make_player()
+	var dummy := _make_dummy()
+	var hand: Array[Card] = [CardDatabase.get_card("dagger_barrage")]
+	combat.setup(player, dummy, hand)
+
+	combat.choose_card(hand[0])
+	var ring := combat.current_ring_event()
+	var speed := ring.speed_px_per_ms()
+	var elapsed_at_target := (RingTimingEvent.RING_START_RADIUS - RingTimingEvent.TARGET_RADIUS) / speed
+	combat.resolve_timing_press(elapsed_at_target)
+
+	t.assert_eq(dummy.hp, 50 - 6, "a dead-center press lands all 6 daggers for 6 damage")
+	combat.free()
+
 static func test_passive_dummy_never_attacks_on_its_turn(t: TestRunner) -> void:
 	var combat := CombatState.new()
 	var player := _make_player()
@@ -85,5 +117,9 @@ static func run_all(t: TestRunner) -> void:
 	test_far_off_press_still_deals_base_damage(t)
 	t.current_test = "test_cannot_afford_card_is_rejected"
 	test_cannot_afford_card_is_rejected(t)
+	t.current_test = "test_dagger_barrage_hit_count_scales_with_accuracy"
+	test_dagger_barrage_hit_count_scales_with_accuracy(t)
+	t.current_test = "test_dagger_barrage_dead_center_lands_all_daggers"
+	test_dagger_barrage_dead_center_lands_all_daggers(t)
 	t.current_test = "test_passive_dummy_never_attacks_on_its_turn"
 	test_passive_dummy_never_attacks_on_its_turn(t)

@@ -1,0 +1,15 @@
+{
+  "id": "dagger_barrage",
+  "name": "Dagger Barrage",
+  "type": "light",
+  "manaCost": 2,
+  "baseDamage": 1,
+  "icon": "res://assets/icons/card_dagger_barrage.svg",
+  "event": {
+    "kind": "ring",
+    "durationMs": 1100,
+    "zoneScale": 0.7,
+    "critBase": 4.0,
+    "tierMultipliers": [1, 2, 4, 6]
+  }
+}
