@@ -37,7 +37,7 @@ static func test_crushing_blow_crit_one_shots_the_dummy(t: TestRunner) -> void:
 	t.assert_eq(combat.phase, CombatState.Phase.COMBAT_OVER, "combat ends immediately when the enemy dies")
 	combat.free()
 
-static func test_far_off_press_still_deals_base_damage(t: TestRunner) -> void:
+static func test_far_off_press_deals_no_damage(t: TestRunner) -> void:
 	var combat := CombatState.new()
 	var player := _make_player()
 	var dummy := _make_dummy()
@@ -47,7 +47,7 @@ static func test_far_off_press_still_deals_base_damage(t: TestRunner) -> void:
 	combat.choose_card(hand[0])
 	combat.resolve_timing_press(0.0)  # ring far from target -> miss
 
-	t.assert_eq(dummy.hp, 50 - 8, "a miss still applies fireball's base 8 damage, not less")
+	t.assert_eq(dummy.hp, 50, "a miss deals zero damage -- the dummy takes no damage at all")
 	combat.free()
 
 static func test_cannot_afford_card_is_rejected(t: TestRunner) -> void:
@@ -65,13 +65,14 @@ static func test_cannot_afford_card_is_rejected(t: TestRunner) -> void:
 static func test_dagger_barrage_reports_hit_count(t: TestRunner) -> void:
 	var card: Card = CardDatabase.get_card("dagger_barrage")
 	t.assert_eq(card.hit_label, "dagger", "dagger_barrage is tagged with the dagger hit label")
-	t.assert_eq(card.hit_count_for_damage(1), 1, "1 damage -> 1 dagger (a miss)")
+	t.assert_eq(card.hit_count_for_damage(0), 0, "0 damage -> 0 daggers (a miss)")
 	t.assert_eq(card.hit_count_for_damage(4), 4, "4 damage -> 4 daggers (a great)")
 	t.assert_eq(card.hit_count_for_damage(6), 6, "6 damage -> 6 daggers (a critical, all land)")
 
-static func test_dagger_barrage_hit_count_scales_with_accuracy(t: TestRunner) -> void:
+static func test_dagger_barrage_miss_lands_no_daggers(t: TestRunner) -> void:
 	# Dagger Barrage: 1 damage per dagger, and the tier controls how many
-	# daggers land -- so damage dealt *is* the dagger count directly.
+	# daggers land -- so damage dealt *is* the dagger count directly. A miss
+	# deals no effect, so zero daggers land.
 	var combat := CombatState.new()
 	var player := _make_player()
 	var dummy := _make_dummy()
@@ -81,7 +82,7 @@ static func test_dagger_barrage_hit_count_scales_with_accuracy(t: TestRunner) ->
 	combat.choose_card(hand[0])
 	combat.resolve_timing_press(0.0)  # far from target -> miss
 
-	t.assert_eq(dummy.hp, 50 - 1, "a miss still lands exactly 1 dagger (base effect), never 0")
+	t.assert_eq(dummy.hp, 50, "a miss lands zero daggers")
 	combat.free()
 
 static func test_dagger_barrage_dead_center_lands_all_daggers(t: TestRunner) -> void:
@@ -108,7 +109,7 @@ static func test_passive_dummy_never_attacks_on_its_turn(t: TestRunner) -> void:
 	combat.setup(player, dummy, hand)
 
 	combat.choose_card(hand[0])
-	combat.resolve_timing_press(0.0)  # miss, dummy survives (50 - 4 = 46 HP)
+	combat.resolve_timing_press(0.0)  # miss -> 0 damage, dummy stays at 50 HP
 
 	t.assert_eq(player.hp, player.max_hp, "a passive training dummy deals no damage back")
 	t.assert_eq(combat.phase, CombatState.Phase.PLAYER_CHOOSING, "turn returns to the player after a passive enemy turn")
@@ -120,14 +121,14 @@ static func run_all(t: TestRunner) -> void:
 	test_card_database_loads_three_prototype_cards(t)
 	t.current_test = "test_crushing_blow_crit_one_shots_the_dummy"
 	test_crushing_blow_crit_one_shots_the_dummy(t)
-	t.current_test = "test_far_off_press_still_deals_base_damage"
-	test_far_off_press_still_deals_base_damage(t)
+	t.current_test = "test_far_off_press_deals_no_damage"
+	test_far_off_press_deals_no_damage(t)
 	t.current_test = "test_cannot_afford_card_is_rejected"
 	test_cannot_afford_card_is_rejected(t)
 	t.current_test = "test_dagger_barrage_reports_hit_count"
 	test_dagger_barrage_reports_hit_count(t)
-	t.current_test = "test_dagger_barrage_hit_count_scales_with_accuracy"
-	test_dagger_barrage_hit_count_scales_with_accuracy(t)
+	t.current_test = "test_dagger_barrage_miss_lands_no_daggers"
+	test_dagger_barrage_miss_lands_no_daggers(t)
 	t.current_test = "test_dagger_barrage_dead_center_lands_all_daggers"
 	test_dagger_barrage_dead_center_lands_all_daggers(t)
 	t.current_test = "test_passive_dummy_never_attacks_on_its_turn"

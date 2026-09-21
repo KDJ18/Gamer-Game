@@ -22,7 +22,7 @@ const GOOD_HALF_MAX := 40.0
 var duration_ms: float
 var zone_scale: float
 var crit_base: float
-## Tier -> multiplier, e.g. {MISS: 1.0, GOOD: 1.25, GREAT: 1.5, CRITICAL: 2.0}
+## Tier -> multiplier, e.g. {MISS: 0.0, GOOD: 1.25, GREAT: 1.5, CRITICAL: 2.0}
 var tier_multipliers: Dictionary
 
 ## Player stats.
@@ -123,11 +123,11 @@ func resolve_timeout() -> int:
 		return assist_min_tier
 	return Tier.MISS
 
-## Card damage for a resolved tier. "A miss still does the card's base
-## effect" (DESIGN.md section 4) is enforced by tier_multipliers[MISS] == 1.0
-## on all cards, not by special-casing here.
+## Card damage for a resolved tier. A miss deals no effect (DESIGN.md section
+## 4): enforced by tier_multipliers[MISS] == 0.0 on all cards, not by
+## special-casing here.
 func damage_for_tier(base_damage: float, tier: int) -> int:
-	var multiplier: float = tier_multipliers.get(tier, 1.0)
+	var multiplier: float = tier_multipliers.get(tier, 0.0)
 	return roundi(base_damage * multiplier)
 
 static func tier_name(tier: int) -> String:

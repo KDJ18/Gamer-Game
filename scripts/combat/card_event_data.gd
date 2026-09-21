@@ -25,7 +25,7 @@ static func from_dict(d: Dictionary) -> CardEventData:
 	data.zone_scale = float(d.get("zoneScale", 1.0))
 	data.crit_base = float(d.get("critBase", 2.0))
 
-	var raw: Array = d.get("tierMultipliers", [1.0, 1.0, 1.0, 1.0])
+	var raw: Array = d.get("tierMultipliers", [0.0, 1.0, 1.0, 1.0])
 	data.tier_multipliers = {
 		RingTimingEvent.Tier.MISS: float(raw[0]),
 		RingTimingEvent.Tier.GOOD: float(raw[1]),

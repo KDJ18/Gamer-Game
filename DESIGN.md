@@ -59,7 +59,7 @@ Hand size and draw rules, per-class hand differences, party mana pool vs per-cla
 5. The card's effect resolves, modified by the tier.
 
 ### Rules that should hold
-- **A miss still does the card's base effect.** A miss is never worse than the card would be with no event.
+- **A miss deals no effect** (`tierMultiplier[Miss] = 0`). Revised from an earlier "miss still does base effect" rule -- misses should sting, and the assist option (below) is the intended safety net for players who can't hit the window, not a forgiving miss.
 - Only some cards have events. Suggested range: about a quarter to a third of a deck, so a turn doesn't become a string of minigames.
 - Include an **assist option** from the start (wider windows or auto-success at baseline). Cheaper to design in now than to retrofit.
 - Include a **calibration setting** for input latency.
@@ -119,9 +119,9 @@ The design principle: **heavy cards are forgiving to hit but have the hardest cr
 
 | Card | Type | Mana | Base dmg | Zone scale `s` | Crit base `cb` | Ring time | Tier multipliers (Miss/Good/Great/Crit) |
 |---|---|---|---|---|---|---|---|
-| Crushing blow | Heavy | 3 | 14 | 1.5 | 1.5 | 1800 ms | 1 / 1.15 / 1.3 / 3.6 |
-| Fireball | Standard | 2 | 8 | 1.0 | 2.5 | 1400 ms | 1 / 1.25 / 1.5 / 2 |
-| Dagger throw | Light | 1 | 4 | 0.7 | 4.0 | 1100 ms | 1 / 1.5 / 2 / 3 |
+| Crushing blow | Heavy | 3 | 14 | 1.5 | 1.5 | 1800 ms | 0 / 1.15 / 1.3 / 3.6 |
+| Fireball | Standard | 2 | 8 | 1.0 | 2.5 | 1400 ms | 0 / 1.25 / 1.5 / 2 |
+| Dagger throw | Light | 1 | 4 | 0.7 | 4.0 | 1100 ms | 0 / 1.5 / 2 / 3 |
 
 Resulting windows at 0 crit chance, 0 cast speed (approximate):
 
@@ -133,7 +133,7 @@ Resulting windows at 0 crit chance, 0 cast speed (approximate):
 
 Balance notes from testing:
 - Crushing blow crit (50 dmg) one-shots the 50 HP test dummy. That is the intended fantasy.
-- Damage per mana at all-miss vs all-crit: heavy about 4.7 to 16.8, standard 4 to 8, dagger 4 to 12. Heavy has the highest ceiling, so watch that it doesn't become the best pick for everything. Levers: mana cost, ring time, crit multiplier.
+- Damage per mana at all-crit: heavy ~16.8, standard 8, dagger 12. A miss now deals 0, so a whiffed card is a wasted turn and mana -- watch that this doesn't make cards with the narrowest windows (dagger throw) feel bad to play without assist on. Levers: mana cost, ring time, crit multiplier, assist window width.
 - A crit window near 50 ms is close to the edge of reliably humanly hittable. Consider a higher floor, and always keep the assist option.
 - Crit chance adds a flat pixel amount to every card, which helps small crit zones more in relative terms. Decide later whether to make it proportional.
 

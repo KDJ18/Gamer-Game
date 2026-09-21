@@ -10,6 +10,6 @@
     "durationMs": 1100,
     "zoneScale": 0.7,
     "critBase": 4.0,
-    "tierMultipliers": [1, 1.5, 2, 3]
+    "tierMultipliers": [0, 1.5, 2, 3]
   }
 }
