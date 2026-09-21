@@ -25,6 +25,7 @@ const CARD_SLOT_SIZE := Vector2(112, 160)
 
 var combat: CombatState
 var _card_views: Array[CardView] = []
+var _last_played_card: Card = null
 
 func _ready() -> void:
 	combat = CombatState.new()
@@ -108,6 +109,7 @@ func _on_phase_changed(phase: CombatState.Phase) -> void:
 	_refresh_status()
 
 func _on_card_committed(card: Card) -> void:
+	_last_played_card = card
 	_log("You play %s (%d mana)." % [card.display_name, card.mana_cost])
 
 func _on_ring_pressed(elapsed_ms: float) -> void:
@@ -117,13 +119,32 @@ func _on_ring_timed_out() -> void:
 	combat.resolve_timing_timeout()
 
 func _on_timing_resolved(card: Card, tier: int, damage: int) -> void:
-	_log("  -> %s: %d damage." % [RingTimingEvent.tier_name(tier), damage])
+	var hits := _hit_description(card, damage)
+	if hits != "":
+		_log("  -> %s: %s land, %d damage." % [RingTimingEvent.tier_name(tier), hits, damage])
+	else:
+		_log("  -> %s: %d damage." % [RingTimingEvent.tier_name(tier), damage])
 
 func _on_damage_applied(target: Combatant, amount: int) -> void:
 	var avatar: MeshInstance3D = dummy_avatar if target == combat.enemy else player_avatar
 	var color := Color(1.0, 0.4, 0.35) if target == combat.enemy else Color(1.0, 0.75, 0.35)
 	_punch_scale(avatar)
-	_spawn_damage_label(avatar.global_position + Vector3(0, 1.3, 0), "-%d" % amount, color)
+
+	var label_text := "-%d" % amount
+	if target == combat.enemy:
+		var hits := _hit_description(_last_played_card, amount)
+		if hits != "":
+			label_text = "-%d (%s)" % [amount, hits]
+
+	_spawn_damage_label(avatar.global_position + Vector3(0, 1.3, 0), label_text, color)
+
+## For multi-hit cards (Card.hit_label set, e.g. "dagger"), a player-facing
+## string like "4 daggers". Empty for ordinary single-effect cards.
+func _hit_description(card: Card, damage: int) -> String:
+	if card == null or card.hit_label == "":
+		return ""
+	var hit_count := card.hit_count_for_damage(damage)
+	return "%d %s%s" % [hit_count, card.hit_label, ("" if hit_count == 1 else "s")]
 
 func _on_enemy_acted(damage: int) -> void:
 	_log("[color=red]Training Dummy hits you for %d.[/color]" % damage)

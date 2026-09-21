@@ -5,6 +5,8 @@
   "manaCost": 2,
   "baseDamage": 1,
   "icon": "res://assets/icons/card_dagger_barrage.svg",
+  "hitLabel": "dagger",
+  "damagePerHit": 1,
   "event": {
     "kind": "ring",
     "durationMs": 1100,

@@ -11,6 +11,12 @@ var base_damage: float = 0.0
 ## Path to the card's icon art (res://assets/icons/...). Empty is valid --
 ## the card view falls back to a type-colored placeholder.
 var icon_path: String = ""
+## Multi-hit flavor, e.g. "dagger" for Dagger Barrage: total damage is
+## really `hit_count * damage_per_hit`, and the UI should say "N daggers
+## hit" rather than just a damage number. Empty means this card doesn't
+## have that flavor -- most cards don't.
+var hit_label: String = ""
+var damage_per_hit: float = 1.0
 ## null if this card has no timing event (most of the deck, per design:
 ## "about a quarter to a third of a deck" should have one).
 var event: CardEventData = null
@@ -23,9 +29,18 @@ static func from_dict(d: Dictionary) -> Card:
 	card.mana_cost = int(d.get("manaCost", 0))
 	card.base_damage = float(d.get("baseDamage", 0.0))
 	card.icon_path = d.get("icon", "")
+	card.hit_label = d.get("hitLabel", "")
+	card.damage_per_hit = float(d.get("damagePerHit", 1.0))
 	if d.get("event") is Dictionary:
 		card.event = CardEventData.from_dict(d["event"])
 	return card
+
+## For multi-hit cards, how many "hits" (e.g. daggers) a resolved damage
+## total represents. Empty hit_label means this card has no such concept.
+func hit_count_for_damage(damage: int) -> int:
+	if hit_label == "":
+		return 0
+	return int(round(damage / maxf(damage_per_hit, 0.0001)))
 
 func has_timing_event() -> bool:
 	return event != null

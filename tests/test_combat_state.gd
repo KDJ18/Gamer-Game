@@ -62,6 +62,13 @@ static func test_cannot_afford_card_is_rejected(t: TestRunner) -> void:
 	t.assert_eq(combat.phase, CombatState.Phase.PLAYER_CHOOSING, "phase stays PLAYER_CHOOSING when the card is rejected")
 	combat.free()
 
+static func test_dagger_barrage_reports_hit_count(t: TestRunner) -> void:
+	var card: Card = CardDatabase.get_card("dagger_barrage")
+	t.assert_eq(card.hit_label, "dagger", "dagger_barrage is tagged with the dagger hit label")
+	t.assert_eq(card.hit_count_for_damage(1), 1, "1 damage -> 1 dagger (a miss)")
+	t.assert_eq(card.hit_count_for_damage(4), 4, "4 damage -> 4 daggers (a great)")
+	t.assert_eq(card.hit_count_for_damage(6), 6, "6 damage -> 6 daggers (a critical, all land)")
+
 static func test_dagger_barrage_hit_count_scales_with_accuracy(t: TestRunner) -> void:
 	# Dagger Barrage: 1 damage per dagger, and the tier controls how many
 	# daggers land -- so damage dealt *is* the dagger count directly.
@@ -117,6 +124,8 @@ static func run_all(t: TestRunner) -> void:
 	test_far_off_press_still_deals_base_damage(t)
 	t.current_test = "test_cannot_afford_card_is_rejected"
 	test_cannot_afford_card_is_rejected(t)
+	t.current_test = "test_dagger_barrage_reports_hit_count"
+	test_dagger_barrage_reports_hit_count(t)
 	t.current_test = "test_dagger_barrage_hit_count_scales_with_accuracy"
 	test_dagger_barrage_hit_count_scales_with_accuracy(t)
 	t.current_test = "test_dagger_barrage_dead_center_lands_all_daggers"
